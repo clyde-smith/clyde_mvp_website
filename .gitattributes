@@ -1,2 +1,154 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PS70 — Weight Display</title>
+
+    <!-- Bootstrap (matches your template’s 5.1.x CDN) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+      :root{
+        --bg: #fffbea;              /* light yellow-ish */
+        --fg: #0f5132;              /* dark green-ish */
+        --muted: #667085;           /* secondary text */
+        --accent: #0d6efd;          /* bootstrap primary */
+      }
+      html, body { height: 100%; }
+      body{
+        background: var(--bg);
+        color: var(--fg);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+      /* Full-height mobile-friendly sections */
+      .page{
+        min-height: 100dvh; /* iOS-friendly dynamic viewport */
+        padding: 2rem clamp(1rem, 4vw, 2rem);
+        padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
+        display: none; /* toggled by JS */
+      }
+      .page.active{ display:block; }
+
+      /* Weight numbers */
+      .weight-now{
+        font-weight: 800;
+        line-height: 1.1;
+        text-align: center;
+        font-size: clamp(3rem, 12vw, 8rem);
+      }
+      .weight-unit{ font-weight: 500; font-size: 0.6em; color: var(--muted); }
+      .weight-max{
+        text-align: center;
+        font-size: clamp(1.25rem, 5vw, 2rem);
+        color: var(--muted);
+        margin-top: .75rem;
+      }
+
+      /* Footer CTA area */
+      .footer-cta{
+        position: sticky; bottom: 0; left: 0; right: 0;
+        padding: 1rem;
+        padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+        background: rgba(255,255,255,0.6);
+        -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+      }
+
+      /* Simple header */
+      .appbar{
+        position: sticky; top: 0; z-index: 1000;
+        padding: .75rem 1rem;
+        background: rgba(255,255,255,0.6);
+        -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+        display: flex; align-items: center; gap: .5rem;
+      }
+      .appbar-title{ margin: 0; font-size: 1.125rem; font-weight: 700; }
+      .appbar a{ text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <!-- Simple app bar (shows on both pages) -->
+    <header class="appbar">
+      <a id="backLink" href="#" class="btn btn-sm btn-outline-secondary d-none">← Back</a>
+      <h1 class="appbar-title">PS70 Weight</h1>
+    </header>
+
+    <!-- HOME / DISPLAY PAGE -->
+    <main id="home" class="page active d-flex flex-column justify-content-center align-items-center text-center">
+      <div>
+        <div class="weight-now">
+          <span id="currentWeight">0</span> <span class="weight-unit">lbs</span>
+        </div>
+        <div class="weight-max">Max: <span id="maxWeight">1500</span> lbs</div>
+      </div>
+
+      <div class="footer-cta w-100">
+        <div class="d-grid gap-2">
+          <a class="btn btn-primary btn-lg" href="#calibration">Calibration</a>
+        </div>
+      </div>
+    </main>
+
+    <!-- CALIBRATION PAGE -->
+    <section id="calibration" class="page container">
+      <h2 class="mb-3">Calibration</h2>
+      <p class="text-muted">This section is placeholder text for now. Add your calibration instructions, steps, helper images, or controls later.</p>
+
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">How calibration might work (placeholder)</h5>
+          <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sed arcu vel sem bibendum varius. Add any text you want here for now.</p>
+        </div>
+      </div>
+
+      <div class="d-grid gap-2">
+        <a class="btn btn-outline-primary" href="#">Back to Display</a>
+      </div>
+    </section>
+
+    <!-- Bootstrap bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      // Tiny router (hash-based) to keep this as a single-file site for GitHub Pages
+      const pages = {
+        home: document.getElementById('home'),
+        calibration: document.getElementById('calibration'),
+      };
+      const backLink = document.getElementById('backLink');
+
+      function show(page){
+        Object.values(pages).forEach(p => p.classList.remove('active'));
+        pages[page].classList.add('active');
+        // Show back button only on calibration page
+        backLink.classList.toggle('d-none', page === 'home');
+        backLink.href = '#';
+      }
+
+      function onRoute(){
+        const hash = location.hash.replace('#','');
+        if(hash === 'calibration') show('calibration');
+        else show('home');
+      }
+
+      window.addEventListener('hashchange', onRoute);
+      onRoute();
+
+      // --- Integration points for your sensor later ---
+      // Update the current weight reading when you have data
+      // Example: setCurrentWeight(123);
+      function setCurrentWeight(lbs){
+        document.getElementById('currentWeight').textContent = Math.round(lbs);
+      }
+      // Update the configured max weight (you can store in localStorage if you want)
+      function setMaxWeight(lbs){
+        document.getElementById('maxWeight').textContent = Math.round(lbs);
+      }
+
+      // Demo (remove later): fake a changing weight so you can see the UI
+      let demo = 0, dir = 1;
+      setInterval(() => { demo += dir * 7; if(demo > 1480 || demo < 0) dir *= -1; setCurrentWeight(demo); }, 500);
+    </script>
+  </body>
+</html>
