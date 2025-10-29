@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>BedScale — Weight</title>
 
-    <!-- Strong anti-cache headers -->
+    <!-- Prevent old cached versions -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
@@ -23,10 +23,74 @@
         backdrop-filter:blur(6px);
         display:flex; align-items:center;
       }
-      .appbar h1 { margin:0; font-size:1.125rem; font-weight:700; }
+
+      .appbar h1 {
+        margin:0;
+        font-size:1.125rem;
+        font-weight:700;
+      }
 
       main {
         min-height:100dvh;
-        display:flex; flex-direction:column; justify-content:center; align-items:center;
-        padding:2rem; padding-bottom:calc(2rem + env(safe-area-inset-bottom,0));
-        text-align:ce
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
+        padding:2rem;
+        padding-bottom:calc(2rem + env(safe-area-inset-bottom,0));
+        text-align:center;
+      }
+
+      .weight-now {
+        font-weight:800;
+        line-height:1.1;
+        font-size:clamp(3rem,12vw,8rem);
+      }
+
+      .weight-unit {
+        font-weight:500;
+        font-size:.6em;
+        color:var(--muted);
+      }
+
+      .weight-max {
+        margin-top:.75rem;
+        font-size:clamp(1.25rem,5vw,2rem);
+        color:var(--muted);
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="appbar w-100">
+      <h1>BedScale</h1>
+      <div class="ms-auto">
+        <!-- relative link (same folder) -->
+        <a class="btn btn-primary btn-sm" href="calibration.html?v=7">Calibrate</a>
+      </div>
+    </header>
+
+    <main>
+      <div>
+        <div class="weight-now">
+          <span id="currentWeight">0</span> <span class="weight-unit">lbs</span>
+        </div>
+        <div class="weight-max">
+          Max: <span id="maxWeight">1500</span> lbs
+        </div>
+      </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // --- Sensor hooks (you’ll wire these up later) ---
+      function setCurrentWeight(lbs) {
+        document.getElementById("currentWeight").textContent = Math.round(lbs);
+      }
+
+      function setMaxWeight(lbs) {
+        document.getElementById("maxWeight").textContent = Math.round(lbs);
+      }
+    </script>
+  </body>
+</html>
